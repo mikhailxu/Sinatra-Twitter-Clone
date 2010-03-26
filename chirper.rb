@@ -9,7 +9,7 @@ configure :development do
   use Rack::Reloader
 end
 #database is created with sqlite3
-DataMapper::setup(:default, "sqlite3://dev.db")
+DataMapper::setup(:default, "sqlite3://#{File.dirname(__FILE__)}/dev.db")
 
 
 #this is our first model
@@ -23,6 +23,7 @@ class Chirp
 end
 
 Chirp.auto_migrate!
+
 #this is the homepage
 get '/' do
   multiples=[]
@@ -48,12 +49,12 @@ get '/test' do
 end
 
 #this is the posting of the chirp actually going the databasea after the form is submitted
+#this is the way that you correctly make stuff save into the database we got rid of the attributes thing
 post "/chirp" do
-  chirp = Chirp.new
-  chirp.attributes = {
+  chirp = Chirp.new(
   :chirp => params[:chirp],
   :created_at => Time.now
-  }
+  )
   chirp.save
   redirect "/chirp"
 
