@@ -3,6 +3,11 @@ require "rubygems"
 require "sinatra"
 require "dm-core"
 require "rack"
+require "redis"
+
+r = Redis.new
+n = (ARGV.shift || 20000).to_i
+
 #attempt to make it so server didnt need to be manually restarted it needs work
 configure :development do
   Sinatra::Application.reset!
@@ -21,8 +26,11 @@ class Chirp
   property :created_at, DateTime
   
 end
-
-Chirp.auto_migrate!
+#File is caps cuz it is a class
+# #{this little deal is ruby code that formats a string}
+unless File.exists? "#{File.dirname(__FILE__)}/dev.db"  #this line will protect our old chirps from being wiped out when server restarts ? is a boolean convention in ruby
+  Chirp.auto_migrate!  #this line will blow away the database and recreate a new one with DataMapper
+end
 
 #this is the homepage
 get '/' do
