@@ -1,3 +1,5 @@
+#i'm adding shit so that i can commit it
+
 #libraries used
 require "rubygems"
 require "sinatra"
